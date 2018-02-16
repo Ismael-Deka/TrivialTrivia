@@ -27,6 +27,9 @@ public class TriviaUtils {
     public final static int TWENTY_FIVE_QUESTIONS = 3;
     public final static int FIFTY_QUESTIONS = 4;
 
+    public final static int MULTIPLE_CHOICE = 0;
+    public final static int TRUE_FALSE = 1;
+
 
     private static ArrayList<String> mCategoryList = new ArrayList<>(Arrays.asList(CATEGORIES));
     private static ArrayList<String> mDifficultyList = new ArrayList<>(Arrays.asList(DIFFICULTY));
@@ -77,9 +80,9 @@ public class TriviaUtils {
     }
 
     public static String getQuestionTypeParam(String questionType){
-        if(questionType.equals(QUESTION_TYPE[0])){
+        if(questionType.equals(QUESTION_TYPE[MULTIPLE_CHOICE])){
             return "multiple";
-        }else if(questionType.equals(QUESTION_TYPE[1])){
+        }else if(questionType.equals(QUESTION_TYPE[TRUE_FALSE])){
             return "boolean";
         }else{
             return null;
@@ -87,11 +90,22 @@ public class TriviaUtils {
     }
     public static String getQuestionTypeName(String questionTypeParam){
         if(questionTypeParam.equals("multiple")){
-            return QUESTION_TYPE[0];
+            return QUESTION_TYPE[MULTIPLE_CHOICE];
         }else if(questionTypeParam.equals("boolean")){
-            return QUESTION_TYPE[1];
+            return QUESTION_TYPE[TRUE_FALSE];
         }else{
             return null;
         }
+    }
+
+    public static boolean isQuestionMultipleChoice(Question question){
+        String questionType = question.getQuestionType();
+
+        if(questionType.equals("multiple")){
+            return true;
+        }else {
+            return false;
+        }
+
     }
 }
