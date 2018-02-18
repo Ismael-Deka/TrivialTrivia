@@ -139,7 +139,7 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
     }
 
     private void endGame(){
-        Toast.makeText(getContext(),"You got " + mNumCorrect+ " questions correct.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"You got " + mNumCorrect+ "of the questions correct.",Toast.LENGTH_LONG).show();
         getActivity().finish();
     }
 
@@ -150,28 +150,28 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
         mCorrectAnswerPosition = rng.nextInt(4) + 1;
         switch (mCorrectAnswerPosition){
             case 1:
-                mAnswerOneButton.setText(question.getCorrectAnswer());
-                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(0));
-                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(1));
-                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
+                mAnswerOneButton.setText(Html.fromHtml(question.getCorrectAnswer()));
+                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
+                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
+                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
                 break;
             case 2:
-                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
-                mAnswerTwoButton.setText(question.getCorrectAnswer());
-                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(1));
-                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
+                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
+                mAnswerTwoButton.setText(Html.fromHtml(question.getCorrectAnswer()));
+                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
+                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
                 break;
             case 3:
-                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
-                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(1));
-                mAnswerThreeButton.setText(question.getCorrectAnswer());
-                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
+                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
+                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
+                mAnswerThreeButton.setText(Html.fromHtml(question.getCorrectAnswer()));
+                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
                 break;
             case 4:
-                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
-                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(1));
-                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(2));
-                mAnswerFourButton.setText(question.getCorrectAnswer());
+                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
+                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
+                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
+                mAnswerFourButton.setText(Html.fromHtml(question.getCorrectAnswer()));
                 break;
         }
 
