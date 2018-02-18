@@ -18,12 +18,14 @@ import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.R;
 import com.ismaeldeka.TrivialTrivia.TriviaUtils;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public class TriviaQuestionFragment extends Fragment implements TriviaActivity.OnQuestionLoaderFinished {
 
     private TextView mQuestionTextView;
+    private  TextView mNoInternetView;
 
     LinearLayout mQuestionView;
 
@@ -44,13 +46,15 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
 
     private Question mCurrentQuestion;
 
+    private ArrayList<Question> mQuestionList;
+
+    private int mNumCorrect = 0;
+
     private int mCorrectAnswerPosition;
 
     public TriviaQuestionFragment() {
 
     }
-
-
 
 
     @Override
@@ -60,6 +64,7 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
         View rootView =inflater.inflate(R.layout.fragment_trivia_question, container, false);
 
         mQuestionTextView = rootView.findViewById(R.id.question);
+        mNoInternetView = rootView.findViewById(R.id.no_internet);
 
         mQuestionView = rootView.findViewById(R.id.question_view);
         mProgressBar = rootView.findViewById(R.id.progress_bar);
@@ -84,34 +89,58 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
     }
 
 
-    @Override
-    public void displayQuestion(Question question) {
 
-        mCurrentQuestion = question;
-
-        mQuestionView.setVisibility(View.VISIBLE);
+    private void displayQuestion(Question question) {
         mProgressBar.setVisibility(View.GONE);
 
-        mQuestionTextView.setText(Html.fromHtml(question.getQuestion()));
+        mTrueFalseGroup.clearCheck();
+        mMultipleChoiceGroup.clearCheck();
 
-        if(TriviaUtils.isQuestionMultipleChoice(question)){
-            displayMultipleChoiceAnswer(question);
-        }else {
-            displayTrueFalseAnswer();
+        if(question != null) {
+            mCurrentQuestion = question;
+
+            mQuestionView.setVisibility(View.VISIBLE);
+
+
+            mQuestionTextView.setText(Html.fromHtml(question.getQuestion()));
+
+            if (TriviaUtils.isQuestionMultipleChoice(question)) {
+                displayMultipleChoiceAnswer(question);
+            } else {
+                displayTrueFalseAnswer();
+            }
+
+            mNextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (isAnswerCorrect()) {
+                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Correct.", Toast.LENGTH_SHORT).show();
+                        mNumCorrect++;
+                    } else {
+                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Incorrect.", Toast.LENGTH_SHORT).show();
+                    }
+                    displayNextQuestion();
+                }
+            });
+        }else{
+            mNoInternetView.setVisibility(View.VISIBLE);
         }
 
-        mNextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isAnswerCorrect()){
-                    Toast.makeText(TriviaQuestionFragment.this.getContext(),"Correct.",Toast.LENGTH_LONG).show();
-                }else {
-                    Toast.makeText(TriviaQuestionFragment.this.getContext(),"Incorrect.",Toast.LENGTH_LONG).show();
-                }
-            }
-        });
 
+    }
 
+    private void displayNextQuestion(){
+        int nextQuestionNumber = mQuestionList.indexOf(mCurrentQuestion) + 1;
+        if(nextQuestionNumber >= mQuestionList.size()-1){
+            endGame();
+        }else{
+            displayQuestion(mQuestionList.get(nextQuestionNumber));
+        }
+    }
+
+    private void endGame(){
+        Toast.makeText(getContext(),"You got " + mNumCorrect+ " questions correct.",Toast.LENGTH_LONG).show();
+        getActivity().finish();
     }
 
     private void displayMultipleChoiceAnswer(Question question){
@@ -184,4 +213,14 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
 
     }
 
+    @Override
+    public void startGame(ArrayList<Question> questions) {
+        if(questions != null) {
+            mQuestionList = questions;
+            mCurrentQuestion = questions.get(0);
+            displayQuestion(mCurrentQuestion);
+        }else {
+            displayQuestion(null);
+        }
+    }
 }
