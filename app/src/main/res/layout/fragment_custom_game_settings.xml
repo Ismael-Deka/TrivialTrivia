@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.ismaeldeka.TrivialTrivia.ui.CustomGameSettingsFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textSize="16sp"
+        android:padding="16dp"/>
+    <Spinner
+        android:id="@+id/spinner_category"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingRight="16dp"
+        android:spinnerMode="dropdown"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Difficulty"
+        android:textSize="16sp"
+        android:padding="16dp"/>
+    <Spinner
+        android:id="@+id/spinner_difficulty"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingRight="16dp"
+        android:spinnerMode="dropdown"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Number of Questions"
+        android:textSize="16sp"
+        android:padding="16dp"/>
+    <EditText
+        android:id="@+id/edit_num_questions"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:text="5"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"/>
+    <Button
+        android:id="@+id/game_settings_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ok"/>
+
+
+
+</LinearLayout>

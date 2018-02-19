@@ -45,7 +45,7 @@ public class MasterListFragment extends Fragment {
 
         ArrayList<String> game = new ArrayList<>();
 
-        game.add("Game");
+        game.add("Custom Game");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(),R.layout.list_item,game);
 

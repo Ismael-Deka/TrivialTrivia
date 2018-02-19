@@ -103,7 +103,7 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
     private ArrayList<Question> getQuestions(String jsonResponse){
 
         ArrayList<Question> questions = new ArrayList<>();
-        ArrayList<String> params = TriviaUtils.getGameParamsList();
+
 
 
         JSONObject reader = null;
@@ -113,13 +113,13 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
             for(int i = 0; i < arr.length();i++) {
                 Question tempQuestion = new Question();
                 reader = arr.getJSONObject(i);
-                Log.e("trivia activity",reader.getString(params.get(TriviaUtils.GameParams.QUESTION)));
-                tempQuestion.setCategory(reader.getString(params.get(TriviaUtils.GameParams.CATEGORY)));
-                tempQuestion.setQuestionType(reader.getString(params.get(TriviaUtils.GameParams.TYPE)));
-                tempQuestion.setDifficulty(reader.getString(params.get(TriviaUtils.GameParams.DIFFICULTY)));
-                tempQuestion.setQuestion(reader.getString(params.get(TriviaUtils.GameParams.QUESTION)));
-                tempQuestion.setCorrectAnswer(reader.getString(params.get(TriviaUtils.GameParams.CORRECT_ANSWER)));
-                tempQuestion.setIncorrectAnswers(getIncorrectAnswers(reader.getJSONArray(params.get(TriviaUtils.GameParams.INCORRECT_ANSWERS))));
+                Log.e("trivia activity",reader.getString(getContext().getString(R.string.question)));
+                tempQuestion.setCategory(reader.getString(getContext().getString(R.string.category)));
+                tempQuestion.setQuestionType(reader.getString(getContext().getString(R.string.type)));
+                tempQuestion.setDifficulty(reader.getString(getContext().getString(R.string.difficulty)));
+                tempQuestion.setQuestion(reader.getString(getContext().getString(R.string.question)));
+                tempQuestion.setCorrectAnswer(reader.getString(getContext().getString(R.string.correct_answer)));
+                tempQuestion.setIncorrectAnswers(getIncorrectAnswers(reader.getJSONArray(getContext().getString(R.string.incorrect_answers))));
                 questions.add(tempQuestion);
 
             }

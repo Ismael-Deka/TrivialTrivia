@@ -8,12 +8,11 @@ import java.util.Arrays;
  */
 
 public class TriviaUtils {
-    private final static String[] CATEGORIES = {"General Knowledge","Entertainment: Books","Entertainment: Film","Entertainment: Music","Entertainment: Musicals & Theatres","Entertainment: Television","Entertainment: Video Games","Entertainment: Board Games","Science & Nature","Science: Computers","Science: Mathematics","Mythology","Sports","Geography","History","Politics","Art","Celebrities","Animals","Vehicles","Entertainment: Comics","Science: Gadgets","Entertainment: Japanese Anime & Manga","Entertainment: Cartoon & Animations"};
+    private final static String[] CATEGORIES = {"Any Category", "General Knowledge","Entertainment: Books","Entertainment: Film","Entertainment: Music","Entertainment: Musicals & Theatres","Entertainment: Television","Entertainment: Video Games","Entertainment: Board Games","Science & Nature","Science: Computers","Science: Mathematics","Mythology","Sports","Geography","History","Politics","Art","Celebrities","Animals","Vehicles","Entertainment: Comics","Science: Gadgets","Entertainment: Japanese Anime & Manga","Entertainment: Cartoon & Animations"};
     private final static String[] DIFFICULTY = {"Easy","Medium","Hard"};
     private final static String[] QUESTION_TYPE = {"Multiple Choice","True or False"};
     private final static String[] GAME_TYPE = {"30-Second Relay","15-Question Trivia","25-Question Trivia","50-Question Trivia"};
-    private final static String[] GAME_PARAMS = {"category","type","difficulty","question","correct_answer","incorrect_answers"};
-    static class GameParams {
+    public static class GameParams {
         public static final int CATEGORY = 0;
         public static final int TYPE = 1;
         public static final int DIFFICULTY = 2;
@@ -35,7 +34,6 @@ public class TriviaUtils {
     private static ArrayList<String> mDifficultyList = new ArrayList<>(Arrays.asList(DIFFICULTY));
     private static ArrayList<String> mQuestionTypeList = new ArrayList<>( Arrays.asList(QUESTION_TYPE));
     private static ArrayList<String> mGameTypeList = new ArrayList<>( Arrays.asList(GAME_TYPE));
-    private static ArrayList<String> mGameParamsList = new ArrayList<>( Arrays.asList(GAME_PARAMS));
 
 
     public static ArrayList<String> getCategoryList() {
@@ -54,9 +52,6 @@ public class TriviaUtils {
         return mGameTypeList;
     }
 
-    public static ArrayList<String> getGameParamsList() {
-        return mGameParamsList;
-    }
 
     public static int getCategoryId(String category){
 

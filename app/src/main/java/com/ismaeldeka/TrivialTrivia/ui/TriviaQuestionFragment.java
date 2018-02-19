@@ -139,7 +139,7 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
     }
 
     private void endGame(){
-        Toast.makeText(getContext(),"You got " + mNumCorrect+ "of the questions correct.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ (mQuestionList.size()-1) +" questions correct.",Toast.LENGTH_LONG).show();
         getActivity().finish();
     }
 

@@ -37,6 +37,9 @@ public class Question {
     }
 
     public void setCategory(String category) {
+        if(category.equals("Any Category")){
+            return;
+        }
         this.mCategory = category;
     }
 
