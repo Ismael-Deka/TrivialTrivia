@@ -1,5 +1,6 @@
 package com.ismaeldeka.TrivialTrivia.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -54,9 +55,27 @@ public class TriviaQuestionFragment extends Fragment{
 
     private boolean mTwoPane;
 
+    public OnGameFinishedListener mCallback;
+
     public TriviaQuestionFragment() {
 
     }
+
+    public interface OnGameFinishedListener{
+        void onGameFinished();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (OnGameFinishedListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString()
+                    + "must implement OnGameClickListener");
+        }
+    }
+
 
 
     @Override
@@ -142,8 +161,11 @@ public class TriviaQuestionFragment extends Fragment{
 
     private void endGame(){
         Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ (mQuestionList.size()-1) +" questions correct.",Toast.LENGTH_LONG).show();
-        if(!mTwoPane)
+        if(!mTwoPane) {
             getActivity().finish();
+        }else {
+            mCallback.onGameFinished();
+        }
 
     }
 

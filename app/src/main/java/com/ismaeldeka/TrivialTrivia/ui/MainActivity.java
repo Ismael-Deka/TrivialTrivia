@@ -3,7 +3,6 @@ package com.ismaeldeka.TrivialTrivia.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ListView;
 
 import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.QuestionLoaderCallback;
@@ -13,33 +12,32 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MasterListFragment.OnGameClickListener,
                                                         CustomGameSettingsFragment.CustomGameCallback,
-                                                        QuestionLoaderCallback.OnQuestionLoaderCompleteListener{
+                                                        QuestionLoaderCallback.OnQuestionLoaderCompleteListener,
+        TriviaQuestionFragment.OnGameFinishedListener{
 
     private boolean mTwoPane;
     private CustomGameSettingsFragment mGameSettingsFragment;
     private QuestionLoaderCallback mLoaderCallback;
     private TriviaQuestionFragment mQuestionFragment;
 
+    private MasterListFragment mMasterListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MasterListFragment listFragment = new MasterListFragment();
+        mMasterListFragment = new MasterListFragment();
         mGameSettingsFragment = new CustomGameSettingsFragment();
         mLoaderCallback = new QuestionLoaderCallback(this);
         mQuestionFragment = new TriviaQuestionFragment();
 
 
+
         if(findViewById(R.id.trivia_fragment_tablet) != null){
             mTwoPane = true;
-
-
-            ListView masterList = (ListView) findViewById(R.id.master_list);
-            masterList.setAdapter(null); // create new adapter for Opening menu
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.master_list_fragment, listFragment)
+                    .add(R.id.master_list_fragment, mMasterListFragment)
                     .commit();
 
         }
@@ -77,7 +75,19 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
 
     @Override
     public void startGame(ArrayList<Question> questions) {
-        mQuestionFragment.startGame(questions,mTwoPane);
         getSupportLoaderManager().destroyLoader(1);
+        mMasterListFragment.setQuestionList(questions);
+        mQuestionFragment.startGame(questions,mTwoPane);
+
+    }
+
+
+    @Override
+    public void onGameFinished() {
+        getSupportFragmentManager().beginTransaction()
+                .detach(mQuestionFragment)
+                .commit();
+        mMasterListFragment.setGameList();
+
     }
 }

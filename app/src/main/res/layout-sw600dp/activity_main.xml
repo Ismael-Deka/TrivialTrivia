@@ -3,9 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <fragment
+    <FrameLayout
         android:id="@+id/master_list_fragment"
-        android:name="com.ismaeldeka.TrivialTrivia.ui.MasterListFragment"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"

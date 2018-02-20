@@ -3,6 +3,7 @@ package com.ismaeldeka.TrivialTrivia.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.R;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 public class MasterListFragment extends Fragment {
 
 
+    private ListView mMasterList;
     private OnGameClickListener mCallback;
 
     public interface OnGameClickListener {
@@ -41,25 +44,47 @@ public class MasterListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_master_list, container, false);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.master_list);
+        mMasterList = (ListView) rootView.findViewById(R.id.master_list);
 
+        setGameList();
+
+        return rootView;
+    }
+
+    public void setGameList(){
         ArrayList<String> game = new ArrayList<>();
 
         game.add("Custom Game");
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(rootView.getContext(),R.layout.list_item,game);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),R.layout.list_item,game);
 
-        listView.setAdapter(arrayAdapter);
+        mMasterList.setAdapter(arrayAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mMasterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 mCallback.onGameClicked(i);
             }
         });
-
-        return rootView;
     }
+
+    public void setQuestionList(ArrayList<Question> questions){
+
+        ArrayList<String> questionList = new ArrayList<>();
+
+        for(Question q : questions){
+            questionList.add(Html.fromHtml(q.getQuestion()).toString());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),R.layout.list_item,questionList);
+        mMasterList.setAdapter(adapter);
+
+        mMasterList.setOnItemClickListener(null);
+
+
+
+    }
+
 
 
 }
