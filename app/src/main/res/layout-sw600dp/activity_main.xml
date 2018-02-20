@@ -10,9 +10,8 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         />
-    <fragment
+    <FrameLayout
         android:id="@+id/trivia_fragment_tablet"
-        android:name="com.ismaeldeka.TrivialTrivia.ui.TriviaQuestionFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"/>

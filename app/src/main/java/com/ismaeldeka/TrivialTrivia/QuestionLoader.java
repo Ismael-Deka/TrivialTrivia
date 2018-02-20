@@ -34,6 +34,12 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
 
     @Override
     public ArrayList<Question> loadInBackground() {
+
+        if(mApiCall == null){
+            //if there's no internet connection
+            return null;
+        }
+
         String jsonResponse = "";
         try {
             jsonResponse = makeHttpRequest(mApiCall.buildApiCall());
@@ -43,7 +49,8 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
         if(!jsonResponse.equals(""))
             return getQuestions(jsonResponse);
         else
-            return null;
+            //if there's no json response
+            return null; // TODO: Differentiate empty json response from No internet
     }
 
     private String makeHttpRequest(URL url) throws IOException {

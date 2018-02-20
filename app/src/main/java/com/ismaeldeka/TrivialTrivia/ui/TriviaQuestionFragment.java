@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 
-public class TriviaQuestionFragment extends Fragment implements TriviaActivity.OnQuestionLoaderFinished {
+public class TriviaQuestionFragment extends Fragment{
 
     private TextView mQuestionTextView;
     private  TextView mNoInternetView;
@@ -51,6 +51,8 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
     private int mNumCorrect = 0;
 
     private int mCorrectAnswerPosition;
+
+    private boolean mTwoPane;
 
     public TriviaQuestionFragment() {
 
@@ -140,7 +142,9 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
 
     private void endGame(){
         Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ (mQuestionList.size()-1) +" questions correct.",Toast.LENGTH_LONG).show();
-        getActivity().finish();
+        if(!mTwoPane)
+            getActivity().finish();
+
     }
 
     private void displayMultipleChoiceAnswer(Question question){
@@ -213,8 +217,8 @@ public class TriviaQuestionFragment extends Fragment implements TriviaActivity.O
 
     }
 
-    @Override
-    public void startGame(ArrayList<Question> questions) {
+    public void startGame(ArrayList<Question> questions, boolean isTwoPane) {
+        mTwoPane = isTwoPane;
         if(questions != null) {
             mQuestionList = questions;
             mCurrentQuestion = questions.get(0);
