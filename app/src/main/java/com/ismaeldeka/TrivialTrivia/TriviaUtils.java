@@ -1,5 +1,8 @@
 package com.ismaeldeka.TrivialTrivia;
 
+import android.content.Context;
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,7 +14,7 @@ public class TriviaUtils {
     private final static String[] CATEGORIES = {"Any Category", "General Knowledge","Entertainment: Books","Entertainment: Film","Entertainment: Music","Entertainment: Musicals & Theatres","Entertainment: Television","Entertainment: Video Games","Entertainment: Board Games","Science & Nature","Science: Computers","Science: Mathematics","Mythology","Sports","Geography","History","Politics","Art","Celebrities","Animals","Vehicles","Entertainment: Comics","Science: Gadgets","Entertainment: Japanese Anime & Manga","Entertainment: Cartoon & Animations"};
     private final static String[] DIFFICULTY = {"Easy","Medium","Hard"};
     private final static String[] QUESTION_TYPE = {"Multiple Choice","True or False"};
-    private final static String[] GAME_TYPE = {"30-Second Relay","15-Question Trivia","25-Question Trivia","50-Question Trivia"};
+    private final static String[] GAME_TYPE = {"Custom Game","30-Second Relay","15-Question Trivia","25-Question Trivia","50-Question Trivia"};
     public static class GameParams {
         public static final int CATEGORY = 0;
         public static final int TYPE = 1;
@@ -21,6 +24,7 @@ public class TriviaUtils {
         public static final int INCORRECT_ANSWERS = 5;
     }
 
+    public final static int CUSTOM_GAME = 0;
     public final static int THIRTY_SEC_RELAY = 1;
     public final static int FIFTEEN_QUESTIONS = 2;
     public final static int TWENTY_FIVE_QUESTIONS = 3;
@@ -28,6 +32,9 @@ public class TriviaUtils {
 
     public final static int MULTIPLE_CHOICE = 0;
     public final static int TRUE_FALSE = 1;
+
+    public final static int ANY_CATEGORY = 0;
+    public final static int MAX_NUM_QUESTIONS = 50;
 
 
     private static ArrayList<String> mCategoryList = new ArrayList<>(Arrays.asList(CATEGORIES));
@@ -54,6 +61,9 @@ public class TriviaUtils {
 
 
     public static int getCategoryId(String category){
+
+        if(category.equals(mCategoryList.get(ANY_CATEGORY)))
+            return -1;
 
         if(mCategoryList.contains(category)){
             int catagoryIndex = mCategoryList.indexOf(category);
@@ -102,5 +112,31 @@ public class TriviaUtils {
             return false;
         }
 
+    }
+
+    public static Bundle getGameArgs(int gameType, Context context){
+        switch (gameType){
+            case THIRTY_SEC_RELAY:
+                return setGameType(context,GAME_TYPE[ANY_CATEGORY],null,MAX_NUM_QUESTIONS,30);
+
+            case FIFTEEN_QUESTIONS:
+                return setGameType(context,GAME_TYPE[ANY_CATEGORY],null, 15,-1);
+
+            case TWENTY_FIVE_QUESTIONS:
+                return setGameType(context,GAME_TYPE[ANY_CATEGORY],null, 25,-1);
+
+            case FIFTY_QUESTIONS:
+                return setGameType(context,GAME_TYPE[ANY_CATEGORY],null,MAX_NUM_QUESTIONS,-1);
+        }
+        return null;
+    }
+
+    private static Bundle setGameType(Context context,String category,String difficulty, int numQuestions, int timeLimit){
+        Bundle b = new Bundle();
+        b.putString(context.getString(R.string.category),category);
+        b.putString(context.getString(R.string.difficulty), difficulty);
+        b.putInt(context.getString(R.string.num_questions), numQuestions);
+        b.putInt(context.getString(R.string.time_limit), timeLimit);
+        return b;
     }
 }

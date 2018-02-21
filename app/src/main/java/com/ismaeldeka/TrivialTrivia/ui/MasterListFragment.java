@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.R;
+import com.ismaeldeka.TrivialTrivia.TriviaUtils;
 
 import java.util.ArrayList;
 
@@ -52,11 +53,9 @@ public class MasterListFragment extends Fragment {
     }
 
     public void setGameList(){
-        ArrayList<String> game = new ArrayList<>();
+        ArrayList<String> games = TriviaUtils.getGameTypeList();
 
-        game.add("Custom Game");
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),R.layout.list_item,game);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),R.layout.list_item,games);
 
         mMasterList.setAdapter(arrayAdapter);
 

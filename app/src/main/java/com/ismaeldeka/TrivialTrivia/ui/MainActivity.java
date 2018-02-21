@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.QuestionLoaderCallback;
 import com.ismaeldeka.TrivialTrivia.R;
+import com.ismaeldeka.TrivialTrivia.TriviaUtils;
 
 import java.util.ArrayList;
 
@@ -50,18 +51,22 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
 
     @Override
     public void onGameClicked(int position) {
-        if(mTwoPane){
+        if(!mTwoPane){
+            Intent i = new Intent(this, TriviaActivity.class);
+            i.putExtra(getString(R.string.game_type),position);
+            startActivity(i);
+        }else if(position == TriviaUtils.CUSTOM_GAME){
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.trivia_fragment_tablet, mGameSettingsFragment)
                     .commit();
-
         }else {
-            Intent i = new Intent(this, TriviaActivity.class);
-
-            startActivity(i);
-
+            Bundle gameArgs = TriviaUtils.getGameArgs(position,this);
+            gameSelected(gameArgs);
         }
+
+
     }
+
 
 
     @Override

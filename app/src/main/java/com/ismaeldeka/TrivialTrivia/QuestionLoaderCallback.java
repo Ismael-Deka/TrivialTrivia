@@ -46,7 +46,9 @@ public class QuestionLoaderCallback implements LoaderManager.LoaderCallbacks<Arr
 
         ApiCall apiCall = new ApiCall(numQuestion);
         apiCall.setCategory(category);
-        apiCall.setDifficulty(difficulty);
+        if (difficulty != null) {
+            apiCall.setDifficulty(difficulty);
+        }
         if(isNetworkAvailable()) {
             return new QuestionLoader(mContext, apiCall);
         }else{
