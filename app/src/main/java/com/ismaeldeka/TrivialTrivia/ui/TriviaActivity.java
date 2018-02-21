@@ -9,7 +9,7 @@ import com.ismaeldeka.TrivialTrivia.R;
 
 import java.util.ArrayList;
 
-public class TriviaActivity extends AppCompatActivity implements QuestionLoaderCallback.OnQuestionLoaderCompleteListener,CustomGameSettingsFragment.CustomGameCallback{
+public class TriviaActivity extends AppCompatActivity implements TriviaQuestionFragment.OnGameFinishedListener,QuestionLoaderCallback.OnQuestionLoaderCompleteListener,CustomGameSettingsFragment.CustomGameCallback{
 
     TriviaQuestionFragment mQuestionFragment;
     CustomGameSettingsFragment mGameSettingsFragment;
@@ -45,9 +45,14 @@ public class TriviaActivity extends AppCompatActivity implements QuestionLoaderC
 
 
     @Override
-    public void startGame(ArrayList<Question> questions) {
-        mQuestionFragment.startGame(questions,false);
+    public void startGame(ArrayList<Question> questions, int timeLimit) {
+        mQuestionFragment.startGame(questions,false, timeLimit);
         getSupportLoaderManager().destroyLoader(1);
+
+    }
+
+    @Override
+    public void onGameFinished() {
 
     }
 }

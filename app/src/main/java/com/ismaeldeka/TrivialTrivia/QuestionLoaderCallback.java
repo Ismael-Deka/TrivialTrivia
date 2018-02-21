@@ -15,8 +15,9 @@ import java.util.ArrayList;
 
 public class QuestionLoaderCallback implements LoaderManager.LoaderCallbacks<ArrayList<Question>> {
 
-    Context mContext;
-    OnQuestionLoaderCompleteListener mCallback;
+    private Context mContext;
+    private OnQuestionLoaderCompleteListener mCallback;
+    private int mTimeLimit;
 
     public QuestionLoaderCallback(Context context){
         mContext = context;
@@ -24,7 +25,7 @@ public class QuestionLoaderCallback implements LoaderManager.LoaderCallbacks<Arr
     }
 
     public interface OnQuestionLoaderCompleteListener {
-        void startGame(ArrayList<Question> questions);
+        void startGame(ArrayList<Question> questions,int timeLimit);
     }
 
     private boolean isNetworkAvailable() {
@@ -38,6 +39,7 @@ public class QuestionLoaderCallback implements LoaderManager.LoaderCallbacks<Arr
     @Override
     public Loader<ArrayList<Question>> onCreateLoader(int id, Bundle args) {
 
+        mTimeLimit = args.getInt(mContext.getString(R.string.time_limit));
         int numQuestion = args.getInt(mContext.getString(R.string.num_questions));
         String category = args.getString(mContext.getString(R.string.category));
         String difficulty= args.getString(mContext.getString(R.string.difficulty));
@@ -54,7 +56,7 @@ public class QuestionLoaderCallback implements LoaderManager.LoaderCallbacks<Arr
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Question>> loader, ArrayList<Question> data) {
-        mCallback.startGame(data);
+        mCallback.startGame(data, mTimeLimit);
 
     }
 

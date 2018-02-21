@@ -2,6 +2,7 @@ package com.ismaeldeka.TrivialTrivia.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -19,7 +20,10 @@ import com.ismaeldeka.TrivialTrivia.Question;
 import com.ismaeldeka.TrivialTrivia.R;
 import com.ismaeldeka.TrivialTrivia.TriviaUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 
@@ -31,6 +35,8 @@ public class TriviaQuestionFragment extends Fragment{
     LinearLayout mQuestionView;
 
     ProgressBar mProgressBar;
+
+    TextView mTimerView;
 
     private RadioGroup mMultipleChoiceGroup;
     private RadioGroup mTrueFalseGroup;
@@ -51,11 +57,17 @@ public class TriviaQuestionFragment extends Fragment{
 
     private int mNumCorrect = 0;
 
+    private int mNumQuestions = 0;
+
     private int mCorrectAnswerPosition;
 
     private boolean mTwoPane;
 
-    public OnGameFinishedListener mCallback;
+    private OnGameFinishedListener mCallback;
+
+    private CountDownTimer mTimer;
+
+
 
     public TriviaQuestionFragment() {
 
@@ -72,7 +84,7 @@ public class TriviaQuestionFragment extends Fragment{
             mCallback = (OnGameFinishedListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + "must implement OnGameClickListener");
+                    + "must implement OnGameFinishedListener");
         }
     }
 
@@ -103,7 +115,10 @@ public class TriviaQuestionFragment extends Fragment{
 
         mNextButton = rootView.findViewById(R.id.button_next_question);
 
+        mTimerView = rootView.findViewById(R.id.timer);
+
         mQuestionView.setVisibility(View.GONE);
+
 
 
         return rootView;
@@ -160,7 +175,7 @@ public class TriviaQuestionFragment extends Fragment{
     }
 
     private void endGame(){
-        Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ (mQuestionList.size()-1) +" questions correct.",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ mNumQuestions +" questions correct.",Toast.LENGTH_LONG).show();
         if(!mTwoPane) {
             getActivity().finish();
         }else {
@@ -238,12 +253,38 @@ public class TriviaQuestionFragment extends Fragment{
         }
 
     }
+    private void startTimer(int timeLimit){
 
-    public void startGame(ArrayList<Question> questions, boolean isTwoPane) {
+        mTimer = new CountDownTimer((timeLimit*1000),1000) {
+            @Override
+            public void onTick(long l) {
+                Date date = new Date(l);
+                DateFormat formatter = new SimpleDateFormat("mm:ss");
+                String countDownTime = formatter.format(date);
+                mTimerView.setText(countDownTime);
+            }
+
+            @Override
+            public void onFinish() {
+                endGame();
+            }
+        };
+
+        mTimer.start();
+
+    }
+
+    public void startGame(ArrayList<Question> questions, boolean isTwoPane,int timeLimit) {
         mTwoPane = isTwoPane;
         if(questions != null) {
             mQuestionList = questions;
             mCurrentQuestion = questions.get(0);
+            mNumQuestions = mQuestionList.size();
+            if(timeLimit == -1) {
+                mTimerView.setVisibility(View.GONE);
+            }else {
+                startTimer(timeLimit);
+            }
             displayQuestion(mCurrentQuestion);
         }else {
             displayQuestion(null);

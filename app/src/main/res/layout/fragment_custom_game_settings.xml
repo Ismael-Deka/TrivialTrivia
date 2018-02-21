@@ -41,8 +41,36 @@
         android:inputType="number"
         android:layout_width="match_parent"
         android:text="5"
+        android:maxLength="2"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="16dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time limit?"
+            android:textSize="16sp"
+            android:padding="16dp"/>
+        <CheckBox
+            android:id="@+id/timer_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/timer_length"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:layout_width="match_parent"
+        android:hint="Time in seconds..."
+        android:maxLength="3"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/game_settings_button"
         android:layout_width="match_parent"

@@ -74,10 +74,10 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
     }
 
     @Override
-    public void startGame(ArrayList<Question> questions) {
+    public void startGame(ArrayList<Question> questions,int timeLimit) {
         getSupportLoaderManager().destroyLoader(1);
         mMasterListFragment.setQuestionList(questions);
-        mQuestionFragment.startGame(questions,mTwoPane);
+        mQuestionFragment.startGame(questions,mTwoPane,timeLimit);
 
     }
 
