@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import java.util.Date;
 import java.util.Random;
 
 
-public class TriviaQuestionFragment extends Fragment{
+public class TriviaQuestionFragment extends Fragment implements MasterListFragment.OnItemClickListener{
 
     private TextView mQuestionTextView;
     private  TextView mNoInternetView;
@@ -55,9 +56,7 @@ public class TriviaQuestionFragment extends Fragment{
 
     private ArrayList<Question> mQuestionList;
 
-    private int mNumCorrect = 0;
-
-    private int mNumQuestions = 0;
+    private SparseArray<String> mSelectedAnswerList;
 
     private int mCorrectAnswerPosition;
 
@@ -65,12 +64,18 @@ public class TriviaQuestionFragment extends Fragment{
 
     private OnGameFinishedListener mCallback;
 
-    private CountDownTimer mTimer;
+    private TextView mQuestionNumber;
 
 
 
-    public TriviaQuestionFragment() {
+    public TriviaQuestionFragment()  {
 
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        mCurrentQuestion = mQuestionList.get(position);
+        displayQuestion(mCurrentQuestion);
     }
 
     public interface OnGameFinishedListener{
@@ -117,7 +122,11 @@ public class TriviaQuestionFragment extends Fragment{
 
         mTimerView = rootView.findViewById(R.id.timer);
 
+        mQuestionNumber = rootView.findViewById(R.id.question_number);
+
         mQuestionView.setVisibility(View.GONE);
+
+
 
 
 
@@ -128,9 +137,6 @@ public class TriviaQuestionFragment extends Fragment{
 
     private void displayQuestion(Question question) {
         mProgressBar.setVisibility(View.GONE);
-
-        mTrueFalseGroup.clearCheck();
-        mMultipleChoiceGroup.clearCheck();
 
         if(question != null) {
             mCurrentQuestion = question;
@@ -150,14 +156,21 @@ public class TriviaQuestionFragment extends Fragment{
                 @Override
                 public void onClick(View view) {
                     if (isAnswerCorrect()) {
-                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Correct.", Toast.LENGTH_SHORT).show();
-                        mNumCorrect++;
+                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Correct.", Toast.LENGTH_SHORT).show();// TODO: Implement system to grade quiz after it's complete.
+
                     } else {
                         Toast.makeText(TriviaQuestionFragment.this.getContext(), "Incorrect.", Toast.LENGTH_SHORT).show();
                     }
+                    setSelectedAnswer();
                     displayNextQuestion();
                 }
             });
+            if(isQuestionNew(question)) {
+                mTrueFalseGroup.clearCheck();
+                mMultipleChoiceGroup.clearCheck();
+            }else {
+                restorePreviousSelection(question);
+            }
         }else{
             mNoInternetView.setVisibility(View.VISIBLE);
         }
@@ -166,22 +179,39 @@ public class TriviaQuestionFragment extends Fragment{
     }
 
     private void displayNextQuestion(){
-        int nextQuestionNumber = mQuestionList.indexOf(mCurrentQuestion) + 1;
-        if(nextQuestionNumber >= mQuestionList.size()-1){
+        int nextQuestionIndex = mQuestionList.indexOf(mCurrentQuestion) + 1;
+        if(nextQuestionIndex >= mQuestionList.size()-1){
             endGame();
         }else{
-            displayQuestion(mQuestionList.get(nextQuestionNumber));
+            mQuestionNumber.setText((nextQuestionIndex+1)+".)");
+            displayQuestion(mQuestionList.get(nextQuestionIndex));
         }
     }
 
     private void endGame(){
-        Toast.makeText(getContext(),"You got " + mNumCorrect+ " out of "+ mNumQuestions +" questions correct.",Toast.LENGTH_LONG).show();
+        int numCorrect = gradeQuiz();
+        int numQuestions = mQuestionList.size();
+        Toast.makeText(getContext(),"You got " + numCorrect + " out of "+ numQuestions +" questions correct.",Toast.LENGTH_LONG).show();
         if(!mTwoPane) {
             getActivity().finish();
         }else {
             mCallback.onGameFinished();
         }
 
+    }
+
+    private int gradeQuiz(){
+        int numCorrect = 0;
+        String selectedAnswer;
+        String correctAnswer;
+        for(int i = 0 ; i < mSelectedAnswerList.size(); i++){
+            selectedAnswer = mSelectedAnswerList.get(i);
+            correctAnswer = mQuestionList.get(i).getCorrectAnswer();
+            if(selectedAnswer.equals(correctAnswer)){
+                numCorrect++;
+            }
+        }
+        return numCorrect;
     }
 
     private void displayMultipleChoiceAnswer(Question question){
@@ -191,28 +221,28 @@ public class TriviaQuestionFragment extends Fragment{
         mCorrectAnswerPosition = rng.nextInt(4) + 1;
         switch (mCorrectAnswerPosition){
             case 1:
-                mAnswerOneButton.setText(Html.fromHtml(question.getCorrectAnswer()));
-                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
-                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
-                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
+                mAnswerOneButton.setText(question.getCorrectAnswer());
+                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(0));
+                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(1));
+                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
                 break;
             case 2:
-                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
-                mAnswerTwoButton.setText(Html.fromHtml(question.getCorrectAnswer()));
-                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
-                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
+                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
+                mAnswerTwoButton.setText(question.getCorrectAnswer());
+                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(1));
+                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
                 break;
             case 3:
-                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
-                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
-                mAnswerThreeButton.setText(Html.fromHtml(question.getCorrectAnswer()));
-                mAnswerFourButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
+                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
+                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(1));
+                mAnswerThreeButton.setText(question.getCorrectAnswer());
+                mAnswerFourButton.setText(question.getIncorrectAnswers().get(2));
                 break;
             case 4:
-                mAnswerOneButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(0)));
-                mAnswerTwoButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(1)));
-                mAnswerThreeButton.setText(Html.fromHtml(question.getIncorrectAnswers().get(2)));
-                mAnswerFourButton.setText(Html.fromHtml(question.getCorrectAnswer()));
+                mAnswerOneButton.setText(question.getIncorrectAnswers().get(0));
+                mAnswerTwoButton.setText(question.getIncorrectAnswers().get(1));
+                mAnswerThreeButton.setText(question.getIncorrectAnswers().get(2));
+                mAnswerFourButton.setText(question.getCorrectAnswer());
                 break;
         }
 
@@ -255,7 +285,7 @@ public class TriviaQuestionFragment extends Fragment{
     }
     private void startTimer(int timeLimit){
 
-        mTimer = new CountDownTimer((timeLimit*1000),1000) {
+        CountDownTimer timer = new CountDownTimer((timeLimit * 1000), 1000) {
             @Override
             public void onTick(long l) {
                 Date date = new Date(l);
@@ -266,20 +296,105 @@ public class TriviaQuestionFragment extends Fragment{
 
             @Override
             public void onFinish() {
+                finishIncompleteQuiz(mQuestionList.indexOf(mCurrentQuestion)+1);
                 endGame();
             }
         };
 
-        mTimer.start();
+        timer.start();
 
     }
+
+    public boolean isQuestionNew(Question question) {
+        int questionIndex = mQuestionList.indexOf(question);
+        if(mSelectedAnswerList.indexOfKey(questionIndex) < 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private void restorePreviousSelection(Question question){
+        int questionIndex = mQuestionList.indexOf(question);
+        if(TriviaUtils.isQuestionMultipleChoice(question)){
+            restoreMultipleChoiceSelection(questionIndex);
+        }else {
+            restoreTrueFalseSelection(questionIndex);
+        }
+    }
+
+    private void setSelectedAnswer(){
+        int selectedIndex = mQuestionList.indexOf(mCurrentQuestion);
+        String selectedAnswer;
+        if(TriviaUtils.isQuestionMultipleChoice(mCurrentQuestion)){
+            int checkedId = mMultipleChoiceGroup.getCheckedRadioButtonId();
+            if(checkedId == mAnswerOneButton.getId()){
+                selectedAnswer =mAnswerOneButton.getText().toString();
+                mSelectedAnswerList.put(selectedIndex, selectedAnswer);
+            } else if(checkedId == mAnswerTwoButton.getId()&&mCorrectAnswerPosition == 2){
+                selectedAnswer =mAnswerTwoButton.getText().toString();
+                mSelectedAnswerList.put(selectedIndex, selectedAnswer);
+            }else if(checkedId == mAnswerThreeButton.getId()&&mCorrectAnswerPosition == 3){
+                selectedAnswer =mAnswerThreeButton.getText().toString();
+                mSelectedAnswerList.put(selectedIndex, selectedAnswer);
+            }else if(checkedId == mAnswerFourButton.getId()&&mCorrectAnswerPosition == 4){
+                selectedAnswer =mAnswerFourButton.getText().toString();
+                mSelectedAnswerList.put(selectedIndex, selectedAnswer);
+            }
+
+        }else {
+            int checkedId = mTrueFalseGroup.getCheckedRadioButtonId();
+            if(checkedId == mTrueButton.getId()){
+                mSelectedAnswerList.put(selectedIndex, "True");
+            }else if(checkedId == mFalseButton.getId()){
+                mSelectedAnswerList.put(selectedIndex, "False");
+            }
+        }
+    }
+
+    private void restoreMultipleChoiceSelection(int questionIndex){
+        String selectedAnswer = mSelectedAnswerList.valueAt(questionIndex);
+
+        String answerOne = mAnswerOneButton.getText().toString();
+        String answerTwo = mAnswerTwoButton.getText().toString();
+        String answerThree = mAnswerThreeButton.getText().toString();
+        String answerFour = mAnswerFourButton.getText().toString();
+
+        if(selectedAnswer.equals(answerOne)){
+            mAnswerOneButton.setChecked(true);
+        }else if(selectedAnswer.equals(answerTwo)){
+            mAnswerTwoButton.setChecked(true);
+        }else if(selectedAnswer.equals(answerThree)){
+            mAnswerThreeButton.setChecked(true);
+        }else if(selectedAnswer.equals(answerFour)) {
+            mAnswerFourButton.setChecked(true);
+        }
+    }
+
+    private void restoreTrueFalseSelection(int questionIndex){
+        String selectedAnswer = mSelectedAnswerList.valueAt(questionIndex);
+
+        if(selectedAnswer.equals("true")){
+            mTrueButton.setChecked(true);
+        }else {
+            mFalseButton.setChecked(true);
+        }
+    }
+
+
+    private void finishIncompleteQuiz(int startingIndex){
+        for (int i = startingIndex; i < mSelectedAnswerList.size(); i++){
+            mSelectedAnswerList.put(i,"");
+        }
+    }
+
 
     public void startGame(ArrayList<Question> questions, boolean isTwoPane,int timeLimit) {
         mTwoPane = isTwoPane;
         if(questions != null) {
             mQuestionList = questions;
             mCurrentQuestion = questions.get(0);
-            mNumQuestions = mQuestionList.size();
+            mSelectedAnswerList = new SparseArray<>(mQuestionList.size());
             if(timeLimit == -1) {
                 mTimerView.setVisibility(View.GONE);
             }else {

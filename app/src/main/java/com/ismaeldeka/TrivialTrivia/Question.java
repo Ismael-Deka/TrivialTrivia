@@ -1,5 +1,7 @@
 package com.ismaeldeka.TrivialTrivia;
 
+import android.text.Html;
+
 import java.util.ArrayList;
 
 /**
@@ -44,7 +46,7 @@ public class Question {
     }
 
     public void setCorrectAnswer(String correctAnswer) {
-        this.mCorrectAnswer = correctAnswer;
+        this.mCorrectAnswer = Html.fromHtml(correctAnswer).toString();
     }
 
     public void setIncorrectAnswers(ArrayList<String> incorrectAnswers) {
@@ -52,7 +54,7 @@ public class Question {
     }
 
     public void setQuestion(String question) {
-        this.mQuestion = question;
+        this.mQuestion = Html.fromHtml(question).toString();
     }
 
 

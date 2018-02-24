@@ -2,6 +2,7 @@ package com.ismaeldeka.TrivialTrivia;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
+import android.text.Html;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -120,7 +121,6 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
             for(int i = 0; i < arr.length();i++) {
                 Question tempQuestion = new Question();
                 reader = arr.getJSONObject(i);
-                Log.e("trivia activity",reader.getString(getContext().getString(R.string.question)));
                 tempQuestion.setCategory(reader.getString(getContext().getString(R.string.category)));
                 tempQuestion.setQuestionType(reader.getString(getContext().getString(R.string.type)));
                 tempQuestion.setDifficulty(reader.getString(getContext().getString(R.string.difficulty)));
@@ -139,7 +139,7 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
     private ArrayList<String> getIncorrectAnswers(JSONArray array) throws JSONException {
         ArrayList<String> arrayList = new ArrayList<>();
         for(int i = 0; i < array.length();i++){
-            arrayList.add(array.getString(i));
+            arrayList.add(Html.fromHtml(array.getString(i)).toString());
         }
         return arrayList;
 

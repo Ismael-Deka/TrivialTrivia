@@ -22,10 +22,10 @@ public class MasterListFragment extends Fragment {
 
 
     private ListView mMasterList;
-    private OnGameClickListener mCallback;
+    private OnItemClickListener mCallback;
 
-    public interface OnGameClickListener {
-        void onGameClicked(int position);
+    public interface OnItemClickListener {
+        void onItemClicked(int position);
 
     }
 
@@ -33,10 +33,10 @@ public class MasterListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (OnGameClickListener) context;
+            mCallback = (OnItemClickListener) context;
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString()
-                    + "must implement OnGameClickListener");
+                    + "must implement OnItemClickListener");
         }
     }
 
@@ -62,7 +62,7 @@ public class MasterListFragment extends Fragment {
         mMasterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mCallback.onGameClicked(i);
+                mCallback.onItemClicked(i);
             }
         });
     }
@@ -70,9 +70,10 @@ public class MasterListFragment extends Fragment {
     public void setQuestionList(ArrayList<Question> questions){
 
         ArrayList<String> questionList = new ArrayList<>();
-
+        int questionNumber;
         for(Question q : questions){
-            questionList.add(Html.fromHtml(q.getQuestion()).toString());
+            questionNumber = questions.indexOf(q)+1;
+            questionList.add(Html.fromHtml(questionNumber +".) "+q.getQuestion()).toString());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),R.layout.list_item,questionList);

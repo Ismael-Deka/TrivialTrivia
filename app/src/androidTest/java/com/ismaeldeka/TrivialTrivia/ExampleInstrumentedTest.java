@@ -3,6 +3,7 @@ package com.ismaeldeka.TrivialTrivia;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.SparseBooleanArray;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,11 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.ismaeldeka.myapplication", appContext.getPackageName());
+        assertEquals(0, getSparseBoolArraySize(9));
+    }
+
+    private int getSparseBoolArraySize(int initSize){
+        SparseBooleanArray booleanArray = new SparseBooleanArray(initSize);
+        return booleanArray.size();
     }
 }

@@ -11,7 +11,7 @@ import com.ismaeldeka.TrivialTrivia.TriviaUtils;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements MasterListFragment.OnGameClickListener,
+public class MainActivity extends AppCompatActivity implements MasterListFragment.OnItemClickListener,
                                                         CustomGameSettingsFragment.CustomGameCallback,
                                                         QuestionLoaderCallback.OnQuestionLoaderCompleteListener,
         TriviaQuestionFragment.OnGameFinishedListener{
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
     }
 
     @Override
-    public void onGameClicked(int position) {
+    public void onItemClicked(int position) {
         if(!mTwoPane){
             Intent i = new Intent(this, TriviaActivity.class);
             i.putExtra(getString(R.string.game_type),position);
