@@ -56,10 +56,9 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
 
     private String makeHttpRequest(URL url) throws IOException {
 
-
         // If the URL is null, then return early.
         if (url == null) {
-            return null;
+            return "";
         }
 
         String response = null;
@@ -111,8 +110,6 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
     private ArrayList<Question> getQuestions(String jsonResponse){
 
         ArrayList<Question> questions = new ArrayList<>();
-
-
 
         JSONObject reader = null;
         try {

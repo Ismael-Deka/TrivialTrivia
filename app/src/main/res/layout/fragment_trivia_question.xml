@@ -103,11 +103,6 @@
 
     </RadioGroup>
 
-    <Button
-        android:id="@+id/button_next_question"
-        android:text="Next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>
     <ProgressBar
@@ -123,6 +118,13 @@
         android:text="No Internet Connection"
         android:textSize="16sp"
         android:visibility="gone"/>
+    <Button
+        android:id="@+id/button_next_question"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="Next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 

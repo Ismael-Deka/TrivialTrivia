@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,6 +127,8 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
 
         mQuestionView.setVisibility(View.GONE);
 
+        mNextButton.setVisibility(View.GONE);
+
 
 
 
@@ -142,6 +145,7 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
             mCurrentQuestion = question;
 
             mQuestionView.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.VISIBLE);
 
 
             mQuestionTextView.setText(Html.fromHtml(question.getQuestion()));
@@ -156,7 +160,7 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
                 @Override
                 public void onClick(View view) {
                     if (isAnswerCorrect()) {
-                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Correct.", Toast.LENGTH_SHORT).show();// TODO: Implement system to grade quiz after it's complete.
+                        Toast.makeText(TriviaQuestionFragment.this.getContext(), "Correct.", Toast.LENGTH_SHORT).show();
 
                     } else {
                         Toast.makeText(TriviaQuestionFragment.this.getContext(), "Incorrect.", Toast.LENGTH_SHORT).show();
@@ -204,13 +208,16 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
         int numCorrect = 0;
         String selectedAnswer;
         String correctAnswer;
+        Log.e("gradeQuiz", (numCorrect)+"");
         for(int i = 0 ; i < mSelectedAnswerList.size(); i++){
             selectedAnswer = mSelectedAnswerList.get(i);
             correctAnswer = mQuestionList.get(i).getCorrectAnswer();
+            Log.e("gradeQuiz", selectedAnswer);
             if(selectedAnswer.equals(correctAnswer)){
                 numCorrect++;
             }
         }
+        Log.e("gradeQuiz", (numCorrect)+"");
         return numCorrect;
     }
 
@@ -340,14 +347,18 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
             }else if(checkedId == mAnswerFourButton.getId()&&mCorrectAnswerPosition == 4){
                 selectedAnswer =mAnswerFourButton.getText().toString();
                 mSelectedAnswerList.put(selectedIndex, selectedAnswer);
+            }else {
+                mSelectedAnswerList.put(selectedIndex,"");
             }
 
-        }else {
+        }else{
             int checkedId = mTrueFalseGroup.getCheckedRadioButtonId();
             if(checkedId == mTrueButton.getId()){
                 mSelectedAnswerList.put(selectedIndex, "True");
             }else if(checkedId == mFalseButton.getId()){
                 mSelectedAnswerList.put(selectedIndex, "False");
+            }else {
+                mSelectedAnswerList.put(selectedIndex,"");
             }
         }
     }
