@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.text.Html;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -208,16 +207,13 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
         int numCorrect = 0;
         String selectedAnswer;
         String correctAnswer;
-        Log.e("gradeQuiz", (numCorrect)+"");
         for(int i = 0 ; i < mSelectedAnswerList.size(); i++){
             selectedAnswer = mSelectedAnswerList.get(i);
             correctAnswer = mQuestionList.get(i).getCorrectAnswer();
-            Log.e("gradeQuiz", selectedAnswer);
             if(selectedAnswer.equals(correctAnswer)){
                 numCorrect++;
             }
         }
-        Log.e("gradeQuiz", (numCorrect)+"");
         return numCorrect;
     }
 
@@ -312,7 +308,7 @@ public class TriviaQuestionFragment extends Fragment implements MasterListFragme
 
     }
 
-    public boolean isQuestionNew(Question question) {
+    private boolean isQuestionNew(Question question) {
         int questionIndex = mQuestionList.indexOf(question);
         if(mSelectedAnswerList.indexOfKey(questionIndex) < 0){
             return true;

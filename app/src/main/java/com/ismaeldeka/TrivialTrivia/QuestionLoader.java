@@ -5,6 +5,10 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.text.Html;
 import android.util.Log;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.security.ProviderInstaller;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,10 +17,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Ismael on 2/15/2018.
@@ -47,7 +52,9 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(!jsonResponse.equals(""))
+        if(jsonResponse == null){
+            return null;
+        }else if(!jsonResponse.equals(""))
             return getQuestions(jsonResponse);
         else
             //if there's no json response
@@ -62,10 +69,11 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
         }
 
         String response = null;
-        HttpURLConnection urlConnection = null;
+        HttpsURLConnection urlConnection = null;
         InputStream inputStream = null;
         try {
-            urlConnection = (HttpURLConnection) url.openConnection();
+            ProviderInstaller.installIfNeeded(getContext());
+            urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.setRequestMethod("GET");
@@ -83,6 +91,10 @@ public class QuestionLoader extends AsyncTaskLoader<ArrayList<Question>> {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Problem retrieving the response.", e);
 
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
         } finally {
             if (urlConnection != null&&inputStream!=null) {
                 urlConnection.disconnect();
