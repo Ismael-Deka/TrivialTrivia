@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Trivial Trivia</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="category">category</string>
+    <string name="type">type</string>
+    <string name="difficulty">difficulty</string>
+    <string name="question">question</string>
+    <string name="correct_answer">correct_answer</string>
+    <string name="incorrect_answers">incorrect_answers</string>
+    <string name="num_questions">number_of_questions</string>
+    <string name="time_limit">time_limit</string>
+    <string name="game_type">game_type</string>
+</resources>
